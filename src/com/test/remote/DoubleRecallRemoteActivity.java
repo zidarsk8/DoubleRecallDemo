@@ -25,7 +25,7 @@ public class DoubleRecallRemoteActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		
-		mDoubleRecall = new DoubleRecall(this, "local_test_key");
+		mDoubleRecall = new DoubleRecall(this, "<insert your app id>");
 		
 		init();
 	}
