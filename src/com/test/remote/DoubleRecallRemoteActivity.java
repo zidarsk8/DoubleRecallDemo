@@ -14,6 +14,8 @@ public class DoubleRecallRemoteActivity extends Activity {
 	private static final int DR_REQUEST_CODE = 0;
 	private DoubleRecall mDoubleRecall;
 	private TextView mResultText;
+	private TextView mStatsText;
+	private Button mButton;
 	private int mCaceled = 0;
 	private int mRetries = 0;
 	private int mNothing = 0;
@@ -25,24 +27,39 @@ public class DoubleRecallRemoteActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		
-		mDoubleRecall = new DoubleRecall(this, "<insert your app id>");
+		mDoubleRecall = new DoubleRecall(this, "local_test_key");
 		
 		init();
 	}
 	
 	private void init(){
 		mResultText = (TextView) findViewById(R.id.resultText);
-
-		showCounters();
-		
+		mButton = ((Button) findViewById(R.id.showRecallButton));
+		mStatsText = ((TextView) findViewById(R.id.statsText));
 		((TextView) findViewById(R.id.versionText)).setText(DoubleRecall.VERSION);
 		
-		((Button) findViewById(R.id.showRecallButton)).setOnClickListener(new OnClickListener() {
+		mButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				mDoubleRecall.showRecall(DR_REQUEST_CODE);
 			}
 		});
+
+		mResultText.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showCounters();
+			}
+		});
+
+		mStatsText.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showCounters();
+			}
+		});
+		
+		showCounters();
 	}
 	
 	@Override
@@ -75,12 +92,20 @@ public class DoubleRecallRemoteActivity extends Activity {
 	}
 	
 	private void showCounters(){
-		((TextView) findViewById(R.id.statsText)).setText(
+		int count = mDoubleRecall.count();
+		mStatsText.setText(
 				"Canceled:     " +mCaceled+ "\n" +
 				"Max retries:  " +mRetries+ "\n" +
 				"No recalls:   " +mNothing+ "\n" +
 				"Correct:      " +mCorrect+ "\n" +
-				"Count:        " +mDoubleRecall.count());
+				"Count:        " +count);
+		
+		if (count > 0){
+			mButton.setVisibility(Button.VISIBLE);
+		}else {
+			mButton.setVisibility(Button.INVISIBLE);
+		}
+		
 	}
 	
 }
